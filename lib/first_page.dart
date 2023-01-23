@@ -286,6 +286,7 @@ class _FirstPageState extends State<FirstPage> {
                                       backgroundColor: Colors.greenAccent),
                                   onPressed: () {
                                     getImageGallery();
+                                    buttonText = "Download";
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(13.0),
@@ -306,6 +307,7 @@ class _FirstPageState extends State<FirstPage> {
                                       backgroundColor: Colors.greenAccent),
                                   onPressed: () {
                                     getImageCamera();
+                                    buttonText = "Download";
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(13.0),
