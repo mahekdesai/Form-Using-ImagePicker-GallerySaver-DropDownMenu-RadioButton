@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'constant.dart';
 import 'second_page.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:gallery_saver/gallery_saver.dart';
 
 String? selectedGender;
 String? fname;
@@ -11,6 +13,7 @@ String? mobNum;
 String? email;
 File? _image;
 String? selectedDesignation = 'Designation';
+String buttonText = "Download";
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
@@ -43,6 +46,20 @@ class _FirstPageState extends State<FirstPage> {
     setState(() {
       _image = imageTemporary;
     });
+  }
+
+  void _saveImage() {
+    setState(() {
+      buttonText = "in progress..";
+    });
+    try {
+      GallerySaver.saveImage(_image!.path);
+      setState(() {
+        buttonText ='Saved!';
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -245,7 +262,8 @@ class _FirstPageState extends State<FirstPage> {
                             ),
                             Padding(
                                 padding: EdgeInsets.only(bottom: 10),
-                                child: GenderField(['Male', 'Female', 'Other'])),
+                                child:
+                                    GenderField(['Male', 'Female', 'Other'])),
                           ],
                         ),
                         SizedBox(
@@ -305,19 +323,37 @@ class _FirstPageState extends State<FirstPage> {
                             SizedBox(
                               width: 20,
                             ),
-                            _image != null
-                                ? Image.file(
-                                    _image!,
-                                    width: 130,
-                                    height: 130,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.network(
-                                    'https://drm2ecjli5gr8.cloudfront.net/photofunny.net/efectos/grandes/foto-marco-gradiente-gris-efecto-borde.jpg',
-                                    height: 130,
-                                    width: 130,
-                                    fit: BoxFit.cover,
+                            Column(
+                              children: [
+                                _image != null
+                                    ? Image.file(
+                                        _image!,
+                                        width: 130,
+                                        height: 130,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        'https://drm2ecjli5gr8.cloudfront.net/photofunny.net/efectos/grandes/foto-marco-gradiente-gris-efecto-borde.jpg',
+                                        height: 130,
+                                        width: 130,
+                                        fit: BoxFit.cover,
+                                      ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.greenAccent),
+                                  onPressed: () {
+                                    _saveImage();
+                                  },
+                                  child: Text(
+                                    buttonText,
+                                    style: TextStyle(
+                                      color: kPink,
+                                      fontSize: 18,
+                                    ),
                                   ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ],
@@ -354,6 +390,7 @@ class _FirstPageState extends State<FirstPage> {
                           _image = null;
                           selectedDesignation = 'Designation';
                           selectedGender = null;
+                          buttonText = "Download";
                         });
                       },
                       child: Padding(
